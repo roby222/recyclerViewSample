@@ -1,7 +1,8 @@
-package com.example.roberto.recyclerviewsample
+package com.example.roberto.recyclerviewsample.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.roberto.recyclerviewsample.R
 
 class MainActivity : AppCompatActivity() {
 
