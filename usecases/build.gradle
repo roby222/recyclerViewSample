@@ -1,6 +1,8 @@
 apply plugin: 'java-library'
 
 dependencies {
+    implementation project(':data')
+    implementation project(':domain')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
