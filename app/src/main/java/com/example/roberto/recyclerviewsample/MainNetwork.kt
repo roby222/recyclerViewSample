@@ -1,5 +1,6 @@
 package com.example.roberto.recyclerviewsample
 
+import android.content.Context
 import com.example.roberto.recyclerviewsample.persistence.ChatData
 import com.example.roberto.recyclerviewsample.utils.FAKE_JSON_RESPONSE_PATH
 import com.example.roberto.recyclerviewsample.utils.FakeNetworkCall
@@ -15,6 +16,9 @@ interface MainNetwork {
 /**
  * Default implementation of MainNetwork.
  */
-object MainNetworkImpl : MainNetwork {
-    override fun fetchChatData() = fakeNetworkLibrary(FAKE_JSON_RESPONSE_PATH)
+class MainNetworkImpl(context: Context) : MainNetwork {
+
+    //TODO
+    val objectArrayString = context.resources.openRawResource(FAKE_JSON_RESPONSE_PATH).bufferedReader().use { it.readText() }
+    override fun fetchChatData() = fakeNetworkLibrary(objectArrayString)
 }

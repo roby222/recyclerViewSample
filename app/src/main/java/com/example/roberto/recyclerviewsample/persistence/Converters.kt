@@ -9,6 +9,7 @@ import java.util.*
 object Converters {
 
     @TypeConverter
+    @JvmStatic
     fun stringToAttachmentList(data: String): List<Attachment> {
         if (data.isNullOrEmpty()) {
             return Collections.emptyList()
@@ -21,7 +22,11 @@ object Converters {
     }
 
     @TypeConverter
+    @JvmStatic
     fun AttachmentListToString(listAttachment: List<Attachment>): String {
+        if(listAttachment.isNullOrEmpty()){
+            return ""
+        }
         return Gson().toJson(listAttachment)
     }
 }

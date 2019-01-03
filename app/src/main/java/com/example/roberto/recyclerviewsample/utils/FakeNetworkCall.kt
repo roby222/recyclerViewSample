@@ -6,6 +6,7 @@ import android.os.Looper
 import android.support.annotation.RawRes
 import com.example.roberto.recyclerviewsample.persistence.ChatData
 import com.google.gson.Gson
+import java.io.IOException
 import java.util.concurrent.Executors
 
 
@@ -16,17 +17,15 @@ private val executor = Executors.newCachedThreadPool()
 private val uiHandler = Handler(Looper.getMainLooper())
 
 
-fun fakeNetworkLibrary(@RawRes jsonPath: Int): FakeNetworkCall<ChatData> {
+fun fakeNetworkLibrary(json: String): FakeNetworkCall<ChatData> {
     val result = FakeNetworkCall<ChatData>()
 
     // Launch the "network request" in a new thread to avoid blocking the calling thread
     executor.submit {
         Thread.sleep(ONE_SECOND) // pretend we actually made a network request by sleeping
 
-        val objectArrayString = Resources.getSystem().openRawResource(jsonPath).bufferedReader().use { it.readText() }
-
         val gson = Gson()
-        val chatData = gson.fromJson(objectArrayString, ChatData::class.java)
+        val chatData = gson.fromJson(json, ChatData::class.java)
         result.onSuccess(chatData)
 
     }

@@ -3,14 +3,21 @@ package com.example.roberto.recyclerviewsample.persistence
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import android.content.Context
+import com.google.gson.annotations.SerializedName
 import java.util.*
 
-
+//TODO che le spostiamo da qua?
 @Entity
 data class Message(
     @PrimaryKey val id: Long, val userId: Long,
-    val content: String, @TypeConverters(Converters::class) val attachment: List<Attachment> = Collections.emptyList()
-)
+    val content: String,
+    @TypeConverters(Converters::class)
+    @SerializedName("attachment")
+    private val _attachment: List<Attachment>?
+) {
+    val attachment
+        get() = if (_attachment.isNullOrEmpty()) Collections.emptyList() else _attachment
+}
 
 @Entity
 data class Attachment(@PrimaryKey val id: String, val title: String, val url: String, val thumbnailUrl: String)
@@ -18,7 +25,7 @@ data class Attachment(@PrimaryKey val id: String, val title: String, val url: St
 @Entity
 data class User(@PrimaryKey val id: Long, val name: String, val avatarId: String)
 
-data class ChatData(val messages: List<Message>, val users : List<User>)
+data class ChatData(val messages: List<Message>, val users: List<User>)
 
 @Dao
 interface UserDao {
