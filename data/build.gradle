@@ -1,10 +1,15 @@
+
 apply plugin: 'java-library'
+apply plugin: 'org.jetbrains.kotlin.jvm'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':domain')
+    implementation"org.jetbrains.kotlin:kotlin-stdlib"
+
 
 }
 
 sourceCompatibility = "7"
 targetCompatibility = "7"
+
+
