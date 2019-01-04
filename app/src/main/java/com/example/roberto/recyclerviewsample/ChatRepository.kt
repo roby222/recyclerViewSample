@@ -1,6 +1,8 @@
 package com.example.roberto.recyclerviewsample
 
 import android.arch.lifecycle.LiveData
+import android.arch.paging.DataSource
+import android.arch.paging.LivePagedListBuilder
 import com.example.roberto.recyclerviewsample.persistence.Message
 import com.example.roberto.recyclerviewsample.persistence.MessageDao
 import com.example.roberto.recyclerviewsample.persistence.User
@@ -18,8 +20,8 @@ import kotlin.coroutines.resumeWithException
 class ChatRepository(val network: MainNetwork, val messagesDao: MessageDao, val userDao: UserDao) {
 
 
-    val messages: LiveData<List<Message>> by lazy<LiveData<List<Message>>>(LazyThreadSafetyMode.NONE) {
-        messagesDao.loadMessages()
+    val paginatedMessages: DataSource.Factory<Int, Message> by lazy<DataSource.Factory<Int, Message>>(LazyThreadSafetyMode.NONE) {
+        messagesDao.loadMessagesPaginated()
     }
 
     val users: LiveData<List<User>> by lazy<LiveData<List<User>>>(LazyThreadSafetyMode.NONE) {

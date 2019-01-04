@@ -35,7 +35,7 @@ fun fakeNetworkLibrary(json: String): FakeNetworkCall<ChatData> {
 /**
  * Fake Call for our network library used to observe results
  */
-class FakeNetworkCall<T> {
+class FakeNetworkCall<T> { //TODO semplificare questa merda?
     var result: FakeNetworkResult<T>? = null
 
     val listeners = mutableListOf<FakeNetworkListener<T>>()

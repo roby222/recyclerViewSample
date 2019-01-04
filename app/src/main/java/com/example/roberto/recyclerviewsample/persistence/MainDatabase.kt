@@ -1,6 +1,7 @@
 package com.example.roberto.recyclerviewsample.persistence
 
 import android.arch.lifecycle.LiveData
+import android.arch.paging.DataSource
 import android.arch.persistence.room.*
 import android.content.Context
 import com.google.gson.annotations.SerializedName
@@ -10,6 +11,7 @@ import java.util.*
 @Entity
 data class Message(
     @PrimaryKey val id: Long, val userId: Long,
+    var userName: String?,
     val content: String,
     @TypeConverters(Converters::class)
     @SerializedName("attachment")
@@ -42,10 +44,15 @@ interface MessageDao {
     fun insertMessages(messages: List<Message>)
 
     @Query("select * from Message")
-    fun loadMessages(): LiveData<List<Message>>
+    fun loadMessagesPaginated(): DataSource.Factory<Int, Message>
 
     @Query("select COUNT(*) from Message")
     fun getMessageNumber(): Int
+
+    @Delete
+    fun delete(person: Message)
+
+    //TODO UPDATE/DELETE enrichment
 }
 
 /**

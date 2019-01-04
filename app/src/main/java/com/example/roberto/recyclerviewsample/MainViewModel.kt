@@ -3,7 +3,11 @@ package com.example.roberto.recyclerviewsample
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.arch.paging.DataSource
+import android.arch.paging.LivePagedListBuilder
+import android.arch.paging.PagedList
 import android.util.Log
+import com.example.roberto.recyclerviewsample.persistence.Message
 import com.example.roberto.recyclerviewsample.utils.singleArgViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,8 +25,18 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
         val FACTORY = singleArgViewModelFactory(::MainViewModel)
     }
 
-    val messages = repository.messages
+    private val paginatedMessages = repository.paginatedMessages
     val users = repository.users
+
+
+    var personsLiveData: LiveData<PagedList<Message>>
+
+    init {
+        val factory: DataSource.Factory<Int, Message> = paginatedMessages
+
+        val pagedListBuilder: LivePagedListBuilder<Int, Message>  = LivePagedListBuilder<Int, Message>(factory, 20)
+        personsLiveData = pagedListBuilder.build()
+    }
 
 
     /**

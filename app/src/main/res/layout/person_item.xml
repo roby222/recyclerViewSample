@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?> <!-- TODO -->
 <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -18,7 +18,7 @@
             app:srcCompat="@drawable/ic_launcher_background" />
 
     <TextView
-            android:id="@+id/locationCoordinates"
+            android:id="@+id/tvname"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -27,10 +27,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="232,111 - 121,000" />
+            tools:text="Tizio Caio" />
 
     <TextView
-            android:id="@+id/locationDate"
+            android:id="@+id/tvmessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -38,5 +38,5 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView"
-            tools:text="28/09/2018" />
+            tools:text="bla bla bla" />
 </android.support.constraint.ConstraintLayout>
