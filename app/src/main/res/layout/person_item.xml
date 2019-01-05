@@ -27,7 +27,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Tizio Caio" />
+            tools:text="Tizio Caio"/>
 
     <TextView
             android:id="@+id/tvmessage"
@@ -38,5 +38,5 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView"
-            tools:text="bla bla bla" />
+            tools:text="bla bla bla"/>
 </android.support.constraint.ConstraintLayout>

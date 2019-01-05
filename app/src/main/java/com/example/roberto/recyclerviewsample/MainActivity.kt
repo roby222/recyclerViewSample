@@ -17,36 +17,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //INIT UI della recycler TODO
-
         val database = getDatabase(this) //todo spostare in application?
-        val repository = ChatRepository(MainNetworkImpl(this), database.messageDao, database.userDao)
+        val repository = ChatRepository(MainNetworkImpl(this), database.messageDao)
 
         viewModel = ViewModelProviders
             .of(this, MainViewModel.FACTORY(repository))
             .get(MainViewModel::class.java)
 
-        val adapter = MessageAdapter(this) //TODO passing users?
+        val adapter = MessageAdapter(this)
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
 
 
         subscribeUI(adapter)
 
-        viewModel.onMainViewLoaded() //TODO is the better place?
+        viewModel.onMainViewLoaded()
 
     }
 
     private fun subscribeUI(adapter: MessageAdapter) {
-        // update the title when the [MainViewModel.title] changes
-        //TODO observe two variables oppure potrebbe occuparsene il viewmodel, oppure cercare relazioni 1:N
-        viewModel.users.observe(this, Observer{ users ->
-            users?.let{
-                adapter.setUsers(users)
-            }
-        })
-
-        viewModel.personsLiveData.observe(this, Observer { messages ->
+        viewModel.messagesLiveData.observe(this, Observer { messages ->
             messages?.let {
                 adapter.submitList(messages)
                 Log.e("GHEE", "messages size " + it.size)

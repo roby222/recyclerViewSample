@@ -26,16 +26,14 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
     }
 
     private val paginatedMessages = repository.paginatedMessages
-    val users = repository.users
 
-
-    var personsLiveData: LiveData<PagedList<Message>>
+    var messagesLiveData: LiveData<PagedList<Message>>
 
     init {
         val factory: DataSource.Factory<Int, Message> = paginatedMessages
 
         val pagedListBuilder: LivePagedListBuilder<Int, Message>  = LivePagedListBuilder<Int, Message>(factory, 20)
-        personsLiveData = pagedListBuilder.build()
+        messagesLiveData = pagedListBuilder.build()
     }
 
 

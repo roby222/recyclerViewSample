@@ -8,16 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.roberto.recyclerviewsample.persistence.Message
-import com.example.roberto.recyclerviewsample.persistence.User
 import kotlinx.android.synthetic.main.person_item.view.*
 
-class MessageAdapter(val context: Context) : PagedListAdapter<Message, MessageAdapter.MessageViewHolder>(MessageDiffCallback()) {
-
-    private lateinit var userList  : List<User>
-
-    fun setUsers(users :  List<User>){
-        userList = users
-    }
+class MessageAdapter(val context: Context) :
+    PagedListAdapter<Message, MessageAdapter.MessageViewHolder>(MessageDiffCallback()) {
 
     override fun onBindViewHolder(holderPerson: MessageViewHolder, position: Int) {
         val message = getItem(position)
@@ -25,27 +19,33 @@ class MessageAdapter(val context: Context) : PagedListAdapter<Message, MessageAd
         if (message == null) {
             holderPerson.clear()
         } else {
-            message.userName = userList.find{it.id == message.userId}?.name ?: ""
             holderPerson.bind(message)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        return MessageViewHolder(LayoutInflater.from(context).inflate(R.layout.person_item,
-            parent, false))
+        return MessageViewHolder(
+            LayoutInflater.from(context).inflate(
+                R.layout.person_item,
+                parent, false
+            )
+        )
 
         //TODO multiple view holder other person, me person, attachment item
+        //TODO RECYCLING CHECKS
+        //TODO STABLEIDS
+        //TODO possibilità di cancellare ATTACHMENT e messaggi
     }
 
 
-    class MessageViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         var tvName: TextView = view.tvname
         var tvMessage: TextView = view.tvmessage
 
         fun bind(message: Message) {
             tvMessage.text = message.content
-            tvName.text = message.userName
+            tvName.text = message.userId.toString()
         }
 
         fun clear() {
