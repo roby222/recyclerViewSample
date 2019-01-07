@@ -38,6 +38,14 @@ class MainActivity : AppCompatActivity() {
     private fun subscribeUI(adapter: MessageAdapter) {
         viewModel.messagesLiveData.observe(this, Observer { messages ->
             messages?.let {
+
+                /*      messagesLiveData = Transformations.switchMap(messagesLiveData) { message ->
+
+                          val attachmentList = message.attachment.forEach {  }
+
+                          LivePagedListBuilder(AppDatabase.getDefault().getPetDao().getPetsByGenderDataFactory(message), 20).build()
+                      }*/
+
                 adapter.submitList(messages)
                 Log.e("GHEE", "messages size " + it.size)
             }
@@ -50,5 +58,4 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-
 }

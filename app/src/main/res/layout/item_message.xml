@@ -1,42 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?> <!-- TODO -->
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:padding="8dp">
+        android:orientation="vertical">
+
 
     <ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:tint="@color/colorAccent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_launcher_background" />
+            app:srcCompat="@drawable/ic_launcher_background" android:layout_alignParentStart="true"
+            android:layout_marginStart="24dp" android:layout_alignParentTop="true" android:layout_marginTop="44dp"/>
 
     <TextView
             android:id="@+id/tvname"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Tizio Caio"/>
+            tools:text="Tizio Caio" android:layout_marginTop="165dp" android:layout_alignParentTop="true"/>
 
     <TextView
             android:id="@+id/tvmessage"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            tools:text="bla bla bla"/>
-</android.support.constraint.ConstraintLayout>
+            tools:text="bla bla bla" android:layout_marginTop="206dp" android:layout_alignParentTop="true"/>
+
+</RelativeLayout>

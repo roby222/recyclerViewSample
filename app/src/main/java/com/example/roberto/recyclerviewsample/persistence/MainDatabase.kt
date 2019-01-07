@@ -7,19 +7,26 @@ import com.google.gson.annotations.SerializedName
 import java.util.*
 
 //TODO che le spostiamo da qua?
+//TODO classe dto
 @Entity
 data class Message(
     @PrimaryKey val id: Long,
+    val messageId: Long,
     val userId: Long,
     val content: String,
-    @TypeConverters(Converters::class)
-    @SerializedName("attachment")
+    @TypeConverters(ListAttachmentConverter::class)
+    @SerializedName("attachments")
     private val _attachment: List<Attachment>?,
     var userName: String?, //TODO
-    var userAvatar: String? //TODO
+    var userAvatar: String?, //TODO
+    @TypeConverters(AttachmentConverter::class)
+    private val _attachmentSpaghetti: Attachment?,
+    val isAnAttachment: Boolean
 ) {
     val attachment
         get() = if (_attachment.isNullOrEmpty()) Collections.emptyList() else _attachment
+    val attachmentSpaghetti
+        get() = _attachmentSpaghetti
 }
 
 @Entity
@@ -27,7 +34,10 @@ data class Attachment(@PrimaryKey val id: String, val title: String, val url: St
 
 data class User(val id: Long, val name: String, val avatarId: String)
 
-data class ChatData(val messages: List<Message>, val users: List<User>)
+data class ChatData(val messages: List<MessageDTO>, val users: List<User>)
+
+
+data class MessageDTO(val id: Long, val userId: Long, val content: String, val attachments: List<Attachment>?)
 
 @Dao
 interface MessageDao {
@@ -51,7 +61,7 @@ interface MessageDao {
  * TitleDatabase provides a reference to the dao to repositories
  */
 @Database(entities = [Message::class, Attachment::class], version = 1, exportSchema = false)
-@TypeConverters(Converters::class)
+@TypeConverters(ListAttachmentConverter::class, AttachmentConverter::class)
 abstract class ChatDatabase : RoomDatabase() {
     abstract val messageDao: MessageDao
 }

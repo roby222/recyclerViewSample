@@ -3,19 +3,18 @@ package com.example.roberto.recyclerviewsample.persistence
 import android.arch.persistence.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.*
 
 
-object Converters {
+object AttachmentConverter {
+
 
     @TypeConverter
     @JvmStatic
-    fun stringToAttachmentList(data: String): List<Attachment> {
+    fun stringToAttachment(data: String?): Attachment? {
         if (data.isNullOrEmpty()) {
-            return Collections.emptyList()
+            return null
         }
-
-        val listType = object : TypeToken<List<Attachment>>() {
+        val listType = object : TypeToken<Attachment>() {
 
         }.getType()
         return Gson().fromJson(data, listType)
@@ -23,11 +22,11 @@ object Converters {
 
     @TypeConverter
     @JvmStatic
-    fun AttachmentListToString(listAttachment: List<Attachment>): String {
-        if(listAttachment.isNullOrEmpty()){
+    fun AttachmentToString(attachment: Attachment?): String {
+        if (attachment == null) {
             return ""
         }
-        return Gson().toJson(listAttachment)
+        return Gson().toJson(attachment)
     }
 
 

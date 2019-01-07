@@ -30,8 +30,12 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
     var messagesLiveData: LiveData<PagedList<Message>>
 
     init {
+        //todo convertire
         val factory: DataSource.Factory<Int, Message> = paginatedMessages
-
+//TODO FLAT OBJECT
+        //TODO Cercare come manipolare
+        //https://stackoverflow.com/questions/50058825/how-to-transform-items-in-a-pagedlistandroid-arch-component-paging-library
+        //l'idea è di duplicare i messages con le informazioni sugli attachments
         val pagedListBuilder: LivePagedListBuilder<Int, Message>  = LivePagedListBuilder<Int, Message>(factory, 20)
         messagesLiveData = pagedListBuilder.build()
     }
@@ -40,7 +44,7 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
     /**
      * Request a snackbar to display a string.
      *
-     * This variable is private because we don't want to expose MutableLiveData
+     * This variable is private because we don't want to expose MutableLiveDataΩ
      *
      * MutableLiveData allows anyone to set a value, and MainViewModel is the only
      * class that should be setting values.

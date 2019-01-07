@@ -1,6 +1,7 @@
 package com.example.roberto.recyclerviewsample
 
 import android.arch.paging.DataSource
+import com.example.roberto.recyclerviewsample.persistence.Attachment
 import com.example.roberto.recyclerviewsample.persistence.Message
 import com.example.roberto.recyclerviewsample.persistence.MessageDao
 import com.example.roberto.recyclerviewsample.utils.FakeNetworkCall
@@ -28,16 +29,47 @@ class ChatRepository(val network: MainNetwork, val messagesDao: MessageDao) {
                 if (messagesDao.getMessageNumber() == 0) { //TODO check query
                     val chatData = network.fetchChatData().await()
                     var messages = chatData.messages
+                    var indexLong = -1L
 
                     //TODO damned room @embedded
                     //https://android.jlelse.eu/setting-android-room-in-real-project-58a77469737c
                     //https://commonsware.com/AndroidArch/previews/room-and-custom-types
-                    messages.onEach { message ->
-                        val user = chatData.users.find { it.id == message.userId }
-                        message.userName = user!!.name
-                        message.userAvatar = user.avatarId
+                    var finalMessages: MutableList<Message> = mutableListOf()
+                    messages.onEach { messageDTO ->
+                        val user = chatData.users.find { it.id == messageDTO.userId }
+                        finalMessages.add(
+                            Message(
+                                // UUID.randomUUID().toString(), //FAKE id
+                                ++indexLong,
+                                messageDTO.id,
+                                messageDTO.userId,
+                                messageDTO.content,
+                                messageDTO.attachments,
+                                user!!.name,
+                                user.avatarId,
+                                null,
+                                false
+                            )
+                        ) // original message
+                        //only italian spaghetti code: add fake message
+                        val attachmentList: List<Attachment>? = messageDTO.attachments
+                        attachmentList?.onEach { attachment ->
+                            finalMessages.add(
+                                Message(
+                                    ++indexLong,
+                                    messageDTO.id,
+                                    messageDTO.userId,
+                                    messageDTO.content,
+                                    null,
+                                    user!!.name,
+                                    user.avatarId,
+                                    attachment,
+                                    true
+                                )
+                            )
+                        }
                     }
-                    messagesDao.insertMessagesCustom(messages)
+                    messagesDao.insertMessagesCustom(finalMessages)
                 }
             } catch (error: FakeNetworkException) {
                 throw ChatBoxRefreshError(error)
