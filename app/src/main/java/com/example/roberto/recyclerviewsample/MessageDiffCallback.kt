@@ -1,7 +1,7 @@
 package com.example.roberto.recyclerviewsample
 
 import android.support.v7.util.DiffUtil
-import com.example.roberto.recyclerviewsample.persistence.Message
+import com.example.roberto.recyclerviewsample.persistence.models.Message
 
 class MessageDiffCallback : DiffUtil.ItemCallback<Message>() {
 

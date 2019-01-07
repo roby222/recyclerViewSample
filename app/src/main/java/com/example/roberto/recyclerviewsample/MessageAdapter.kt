@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.example.roberto.recyclerviewsample.persistence.Message
+import com.example.roberto.recyclerviewsample.persistence.models.Message
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.item_attachment.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
@@ -23,25 +23,25 @@ class MessageAdapter(val context: Context) :
     private val USER_MESSAGE = 2
 
     init {
-        setHasStableIds(true);
+        setHasStableIds(true)
     }
-
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         val message = getItem(position)
-
-        when (viewHolder.getItemViewType()) {
+        when (viewHolder.itemViewType) {
             MESSAGE -> {
                 val messageViewHolder = viewHolder as MessageViewHolder
                 messageViewHolder.bind(message!!)
             }
+            USER_MESSAGE -> {
+                val userMessageViewHolder = viewHolder as UserMessageViewHolder
+                userMessageViewHolder.bind(message!!)
+            }
             ATTACHMENT -> {
                 val attachmentViewHolder = viewHolder as AttachmentViewHolder
-                attachmentViewHolder.bind(message!!, context)
+                attachmentViewHolder.bind(message!!)
             }
         }
-
-
     }
 
     override fun getItemId(position: Int): Long {
@@ -55,41 +55,65 @@ class MessageAdapter(val context: Context) :
         if (getItem(position)!!.isAnAttachment) {
             return ATTACHMENT
         }
+        if (getItem(position)!!.userId == 1L) {
+            return USER_MESSAGE
+        }
         return MESSAGE
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == ATTACHMENT) {
-            return AttachmentViewHolder(
-                LayoutInflater.from(context).inflate(
-                    R.layout.item_attachment, parent, false
+        lateinit var recyclerViewHolder: RecyclerView.ViewHolder
+        when (viewType) {
+            ATTACHMENT -> {
+                recyclerViewHolder = AttachmentViewHolder(
+                    LayoutInflater.from(context).inflate(R.layout.item_attachment, parent, false)
                 )
-            )
+            }
+            MESSAGE -> {
+                recyclerViewHolder = MessageViewHolder(
+                    LayoutInflater.from(context).inflate(
+                        R.layout.item_message,
+                        parent, false
+                    )
+                )
+            }
+            USER_MESSAGE -> {
+                recyclerViewHolder = MessageViewHolder(
+                    LayoutInflater.from(context).inflate(
+                        R.layout.item_user_message,
+                        parent, false
+                    )
+                )
+            }
         }
-        return MessageViewHolder(
-            LayoutInflater.from(context).inflate(
-                R.layout.item_message,
-                parent, false
-            )
-        )
-
-
-        //TODO RECYCLING CHECKS
-        //TODO possibilità di cancellare ATTACHMENT e messaggi
-        //TODO layout per userID = 1
+        return recyclerViewHolder
     }
 
+    //TODO possibilità di cancellare ATTACHMENT e messaggi
+    //TODO RECYCLING CHECKS e clear
 
-    class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
+    class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) { //TODO UI
         var tvName: TextView = view.tvname
         var tvMessage: TextView = view.tvmessage
 
         fun bind(message: Message) {
-
             tvMessage.text = message.content
             tvName.text = message.userId.toString()
+        }
 
+        fun clear() {
+            tvName.text = null
+        }
+    }
+
+    class UserMessageViewHolder(view: View) : RecyclerView.ViewHolder(view) { //TODO UI
+        var tvName: TextView = view.tvname
+        var tvMessage: TextView = view.tvmessage
+
+        fun bind(message: Message) {
+            tvMessage.text = message.content
+            tvName.text = message.userId.toString()
         }
 
         fun clear() {
@@ -98,16 +122,15 @@ class MessageAdapter(val context: Context) :
 
     }
 
-    class AttachmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
+    class AttachmentViewHolder(view: View) : RecyclerView.ViewHolder(view) { //TODO ui
         var tvAttachmentName: TextView = view.atttvname
         var ivAttachmentImage: ImageView = view.attimageView
 
-        fun bind(message: Message, context: Context) {
-
-            tvAttachmentName.text = message.attachmentSpaghetti?.title
+        fun bind(message: Message) {
+//TODO if userId = 1 => change alignment
+            tvAttachmentName.text = message.attachment?.title
             Glide.with(ivAttachmentImage.context)
-                .load(message.attachmentSpaghetti?.url)
+                .load(message.attachment?.url)
                 .into(ivAttachmentImage)
         }
 
@@ -115,6 +138,5 @@ class MessageAdapter(val context: Context) :
             tvAttachmentName.text = null
             ivAttachmentImage.recyclerview //TODO check
         }
-
     }
 }

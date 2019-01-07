@@ -39,22 +39,15 @@ class MainActivity : AppCompatActivity() {
         viewModel.messagesLiveData.observe(this, Observer { messages ->
             messages?.let {
 
-                /*      messagesLiveData = Transformations.switchMap(messagesLiveData) { message ->
+                /*  TODO    messagesLiveData = Transformations.switchMap(messagesLiveData) { message ->
 
-                          val attachmentList = message.attachment.forEach {  }
+                          val attachmentList = message.attachmentList.forEach {  }
 
                           LivePagedListBuilder(AppDatabase.getDefault().getPetDao().getPetsByGenderDataFactory(message), 20).build()
                       }*/
 
                 adapter.submitList(messages)
                 Log.e("GHEE", "messages size " + it.size)
-            }
-        })
-
-        // show the spinner when [MainViewModel.spinner] is true
-        viewModel.spinner.observe(this, Observer { value ->
-            value?.let { show ->
-                // TODO spinner.visibility = if (show) View.VISIBLE else View.GONE
             }
         })
     }

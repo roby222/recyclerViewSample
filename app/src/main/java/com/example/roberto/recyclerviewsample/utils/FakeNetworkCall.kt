@@ -1,12 +1,9 @@
 package com.example.roberto.recyclerviewsample.utils
 
-import android.content.res.Resources
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.RawRes
-import com.example.roberto.recyclerviewsample.persistence.ChatData
+import com.example.roberto.recyclerviewsample.persistence.models.ChatData
 import com.google.gson.Gson
-import java.io.IOException
 import java.util.concurrent.Executors
 
 

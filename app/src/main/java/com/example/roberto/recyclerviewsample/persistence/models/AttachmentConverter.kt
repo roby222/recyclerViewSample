@@ -1,4 +1,4 @@
-package com.example.roberto.recyclerviewsample.persistence
+package com.example.roberto.recyclerviewsample.persistence.models
 
 import android.arch.persistence.room.TypeConverter
 import com.google.gson.Gson

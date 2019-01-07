@@ -1,13 +1,12 @@
 package com.example.roberto.recyclerviewsample
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.util.Log
-import com.example.roberto.recyclerviewsample.persistence.Message
+import com.example.roberto.recyclerviewsample.persistence.models.Message
 import com.example.roberto.recyclerviewsample.utils.singleArgViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,30 +38,6 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
         val pagedListBuilder: LivePagedListBuilder<Int, Message>  = LivePagedListBuilder<Int, Message>(factory, 20)
         messagesLiveData = pagedListBuilder.build()
     }
-
-
-    /**
-     * Request a snackbar to display a string.
-     *
-     * This variable is private because we don't want to expose MutableLiveDataΩ
-     *
-     * MutableLiveData allows anyone to set a value, and MainViewModel is the only
-     * class that should be setting values.
-     */
-    private val _snackBar = MutableLiveData<String>()
-
-    /**
-     * Request a snackbar to display a string.
-     */
-    val snackbar: LiveData<String>
-        get() = _snackBar
-
-    private val _spinner = MutableLiveData<Boolean>()
-    /**
-     * Show a loading spinner if true
-     */
-    val spinner: LiveData<Boolean>
-        get() = _spinner
 
     /**
      * This is the job for all coroutines started by this ViewModel.
@@ -101,10 +76,8 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
     private fun launchDataLoad(block: suspend () -> Unit): Job {
         return uiScope.launch {
             try {
-                _spinner.value = true
                 block()
             } catch (error: ChatBoxRefreshError) {
-                _spinner.value = false
                 Log.e("MainViewModel", "Failed to retrieve data")
             }
         }
