@@ -18,4 +18,6 @@ data class Message(
 ) {
     val attachment
         get() = _attachment
+    val isOwnMessage
+        get() = userId == 1L
 }

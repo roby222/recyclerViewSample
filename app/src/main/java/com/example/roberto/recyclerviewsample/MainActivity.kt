@@ -8,6 +8,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.example.roberto.recyclerviewsample.persistence.getDatabase
 import kotlinx.android.synthetic.main.activity_main.*
+import android.support.v7.widget.DefaultItemAnimator
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = MessageAdapter(this)
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
-
+        recyclerview.itemAnimator = DefaultItemAnimator()
 
         subscribeUI(adapter)
 

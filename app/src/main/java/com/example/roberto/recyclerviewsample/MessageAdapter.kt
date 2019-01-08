@@ -4,15 +4,11 @@ import android.arch.paging.PagedListAdapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import com.bumptech.glide.Glide
 import com.example.roberto.recyclerviewsample.persistence.models.Message
-import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.item_attachment.view.*
-import kotlinx.android.synthetic.main.item_message.view.*
+import com.example.roberto.recyclerviewsample.viewholders.AttachmentViewHolder
+import com.example.roberto.recyclerviewsample.viewholders.MessageViewHolder
+import com.example.roberto.recyclerviewsample.viewholders.UserMessageViewHolder
 
 
 class MessageAdapter(val context: Context) :
@@ -21,6 +17,9 @@ class MessageAdapter(val context: Context) :
     private val MESSAGE = 0
     private val ATTACHMENT = 1
     private val USER_MESSAGE = 2
+
+    private var lastPosition = -1
+
 
     init {
         setHasStableIds(true)
@@ -42,7 +41,22 @@ class MessageAdapter(val context: Context) :
                 attachmentViewHolder.bind(message!!)
             }
         }
+       //TODO setAnimation(viewHolder.itemView, position)
     }
+
+    //TODO check animation https://proandroiddev.com/enter-animation-using-recyclerview-and-layoutanimation-part-1-list-75a874a5d213
+    /*private fun setAnimation(viewToAnimate: View, position: Int) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition) {
+            val animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left)
+            viewToAnimate.startAnimation(animation)
+            lastPosition = position
+        }
+    }
+
+    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+        (holder as CustomViewHolder).clearAnimation()
+    }*/
 
     override fun getItemId(position: Int): Long {
         return getItem(position)!!.id
@@ -55,7 +69,7 @@ class MessageAdapter(val context: Context) :
         if (getItem(position)!!.isAnAttachment) {
             return ATTACHMENT
         }
-        if (getItem(position)!!.userId == 1L) {
+        if (getItem(position)!!.isOwnMessage) {
             return USER_MESSAGE
         }
         return MESSAGE
@@ -78,7 +92,7 @@ class MessageAdapter(val context: Context) :
                 )
             }
             USER_MESSAGE -> {
-                recyclerViewHolder = MessageViewHolder(
+                recyclerViewHolder = UserMessageViewHolder(
                     LayoutInflater.from(context).inflate(
                         R.layout.item_user_message,
                         parent, false
@@ -90,53 +104,30 @@ class MessageAdapter(val context: Context) :
     }
 
     //TODO possibilità di cancellare ATTACHMENT e messaggi
+/*    private fun setRecyclerViewItemTouchListener() {
+
+        //1
+        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, viewHolder1: RecyclerView.ViewHolder): Boolean {
+                //2
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
+                //3
+                val position = viewHolder.adapterPosition
+                photosList.removeAt(position)
+                recyclerView.adapter.notifyItemRemoved(position)
+            }
+        }
+
+        //4
+        val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+    }*/
+
+
     //TODO RECYCLING CHECKS e clear
 
 
-    class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) { //TODO UI
-        var tvName: TextView = view.tvname
-        var tvMessage: TextView = view.tvmessage
-
-        fun bind(message: Message) {
-            tvMessage.text = message.content
-            tvName.text = message.userId.toString()
-        }
-
-        fun clear() {
-            tvName.text = null
-        }
-    }
-
-    class UserMessageViewHolder(view: View) : RecyclerView.ViewHolder(view) { //TODO UI
-        var tvName: TextView = view.tvname
-        var tvMessage: TextView = view.tvmessage
-
-        fun bind(message: Message) {
-            tvMessage.text = message.content
-            tvName.text = message.userId.toString()
-        }
-
-        fun clear() {
-            tvName.text = null
-        }
-
-    }
-
-    class AttachmentViewHolder(view: View) : RecyclerView.ViewHolder(view) { //TODO ui
-        var tvAttachmentName: TextView = view.atttvname
-        var ivAttachmentImage: ImageView = view.attimageView
-
-        fun bind(message: Message) {
-//TODO if userId = 1 => change alignment
-            tvAttachmentName.text = message.attachment?.title
-            Glide.with(ivAttachmentImage.context)
-                .load(message.attachment?.url)
-                .into(ivAttachmentImage)
-        }
-
-        fun clear() {
-            tvAttachmentName.text = null
-            ivAttachmentImage.recyclerview //TODO check
-        }
-    }
 }
