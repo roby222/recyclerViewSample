@@ -16,7 +16,7 @@ class MessageAdapter(val context: Context) :
 
     private val MESSAGE = 0
     private val ATTACHMENT = 1
-    private val USER_MESSAGE = 2
+    private val OWN_MESSAGE = 2
 
     private var lastPosition = -1
 
@@ -32,7 +32,7 @@ class MessageAdapter(val context: Context) :
                 val messageViewHolder = viewHolder as MessageViewHolder
                 messageViewHolder.bind(message!!)
             }
-            USER_MESSAGE -> {
+            OWN_MESSAGE -> {
                 val userMessageViewHolder = viewHolder as UserMessageViewHolder
                 userMessageViewHolder.bind(message!!)
             }
@@ -70,7 +70,7 @@ class MessageAdapter(val context: Context) :
             return ATTACHMENT
         }
         if (getItem(position)!!.isOwnMessage) {
-            return USER_MESSAGE
+            return OWN_MESSAGE
         }
         return MESSAGE
     }
@@ -91,10 +91,10 @@ class MessageAdapter(val context: Context) :
                     )
                 )
             }
-            USER_MESSAGE -> {
+            OWN_MESSAGE -> {
                 recyclerViewHolder = UserMessageViewHolder(
                     LayoutInflater.from(context).inflate(
-                        R.layout.item_user_message,
+                        R.layout.item_message,
                         parent, false
                     )
                 )

@@ -20,7 +20,7 @@ class AttachmentViewHolder(view: View) : CustomViewHolder(view) { //TODO ui
             .into(ivAttachmentImage)
     }
 
-    fun clear() {
+    fun clear() { //TODO
         tvAttachmentName.text = null
         ivAttachmentImage.recyclerview //TODO check
     }
