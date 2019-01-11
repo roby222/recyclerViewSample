@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RecyclerViewSample</string>
+    <string name="own_message_title">Me</string>
 </resources>
