@@ -35,7 +35,7 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
         //TODO Cercare come manipolare
         //https://stackoverflow.com/questions/50058825/how-to-transform-items-in-a-pagedlistandroid-arch-component-paging-library
         //l'idea è di duplicare i messages con le informazioni sugli attachments
-        val pagedListBuilder: LivePagedListBuilder<Int, Message>  = LivePagedListBuilder<Int, Message>(factory, 20)
+        val pagedListBuilder: LivePagedListBuilder<Int, Message> = LivePagedListBuilder<Int, Message>(factory, 20)
         messagesLiveData = pagedListBuilder.build()
     }
 

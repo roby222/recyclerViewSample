@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import com.example.roberto.recyclerviewsample.persistence.models.Message
 import com.example.roberto.recyclerviewsample.viewholders.AttachmentViewHolder
 import com.example.roberto.recyclerviewsample.viewholders.MessageViewHolder
-import com.example.roberto.recyclerviewsample.viewholders.UserMessageViewHolder
 
 
 class MessageAdapter(val context: Context) :
@@ -16,7 +15,6 @@ class MessageAdapter(val context: Context) :
 
     private val MESSAGE = 0
     private val ATTACHMENT = 1
-    private val OWN_MESSAGE = 2
 
     private var lastPosition = -1
 
@@ -32,16 +30,12 @@ class MessageAdapter(val context: Context) :
                 val messageViewHolder = viewHolder as MessageViewHolder
                 messageViewHolder.bind(message!!)
             }
-            OWN_MESSAGE -> {
-                val ownMessageViewHolder = viewHolder as UserMessageViewHolder
-                ownMessageViewHolder.bind(message!!)
-            }
             ATTACHMENT -> {
                 val attachmentViewHolder = viewHolder as AttachmentViewHolder
                 attachmentViewHolder.bind(message!!)
             }
         }
-       //TODO setAnimation(viewHolder.itemView, position)
+        //TODO setAnimation(viewHolder.itemView, position)
     }
 
     //TODO check animation https://proandroiddev.com/enter-animation-using-recyclerview-and-layoutanimation-part-1-list-75a874a5d213
@@ -66,9 +60,6 @@ class MessageAdapter(val context: Context) :
         if (getItem(position)!!.isAnAttachment) {
             return ATTACHMENT
         }
-        if (getItem(position)!!.isOwnMessage) {
-            return OWN_MESSAGE
-        }
         return MESSAGE
     }
 
@@ -82,14 +73,6 @@ class MessageAdapter(val context: Context) :
             }
             MESSAGE -> {
                 recyclerViewHolder = MessageViewHolder(
-                    LayoutInflater.from(context).inflate(
-                        R.layout.item_message,
-                        parent, false
-                    )
-                )
-            }
-            OWN_MESSAGE -> {
-                recyclerViewHolder = UserMessageViewHolder(
                     LayoutInflater.from(context).inflate(
                         R.layout.item_message,
                         parent, false

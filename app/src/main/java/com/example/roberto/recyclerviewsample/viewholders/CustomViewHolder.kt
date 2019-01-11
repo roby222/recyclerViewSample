@@ -5,5 +5,5 @@ import android.view.View
 
 abstract class CustomViewHolder(view: View) : RecyclerView.ViewHolder(view) { //TODO
 
-abstract fun clearAnimation()
+    abstract fun clearAnimation()
 }

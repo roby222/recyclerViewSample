@@ -39,7 +39,7 @@ import android.arch.lifecycle.ViewModelProvider
  * @return a function of one argument that returns ViewModelProvider.Factory for ViewModelProviders
  */
 fun <T : ViewModel, A> singleArgViewModelFactory(constructor: (A) -> T):
-        (A) -> ViewModelProvider.NewInstanceFactory {
+            (A) -> ViewModelProvider.NewInstanceFactory {
     return { arg: A ->
         object : ViewModelProvider.NewInstanceFactory() {
             @Suppress("UNCHECKED_CAST")
