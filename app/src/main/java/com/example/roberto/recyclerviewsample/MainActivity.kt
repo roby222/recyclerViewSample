@@ -20,26 +20,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val database = getDatabase(this) //todo spostare in application?
+        val database = getDatabase(this)
         val repository = ChatRepository(MainNetworkImpl(this), database.messageDao)
 
         viewModel = ViewModelProviders
             .of(this, MainViewModel.FACTORY(repository))
             .get(MainViewModel::class.java)
 
-        val adapter = MessageAdapter(this)
-        recyclerview.layoutManager = LinearLayoutManager(this)
-        recyclerview.adapter = adapter
-        recyclerview.itemAnimator = DefaultItemAnimator()
+        val messageAdapter = MessageAdapter(this)
+        recyclerview.apply{
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = messageAdapter
+            itemAnimator = DefaultItemAnimator()
+        }
 
-        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(adapter) {
-            val position = it.adapterPosition
-            val messageToDelete = adapter.getMessageItem(position)
-            viewModel.deleteItem(messageToDelete)
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(messageAdapter) {
+            viewModel.deleteItem(messageAdapter.getMessageItem(it.adapterPosition))
         })
         itemTouchHelper.attachToRecyclerView(recyclerview)
 
-        subscribeUI(adapter)
+        subscribeUI(messageAdapter)
         viewModel.onMainViewLoaded()
     }
 

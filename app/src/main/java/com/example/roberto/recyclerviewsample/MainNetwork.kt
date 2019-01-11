@@ -3,14 +3,13 @@ package com.example.roberto.recyclerviewsample
 import android.content.Context
 import com.example.roberto.recyclerviewsample.persistence.models.ChatData
 import com.example.roberto.recyclerviewsample.utils.FAKE_JSON_RESPONSE_PATH
-import com.example.roberto.recyclerviewsample.utils.FakeNetworkCall
 import com.example.roberto.recyclerviewsample.utils.fakeNetworkLibrary
 
 /**
- * Main network interface which will fetch a new welcome title for us
+ * Main network interface which will fetch all chat data
  */
 interface MainNetwork {
-    fun fetchChatData(): FakeNetworkCall<ChatData>
+    fun fetchChatData(): ChatData
 }
 
 /**
@@ -18,7 +17,7 @@ interface MainNetwork {
  */
 class MainNetworkImpl(context: Context) : MainNetwork {
 
-    //TODO context reference?
+    //TODO tests?
     private val objectArrayString =
         context.resources.openRawResource(FAKE_JSON_RESPONSE_PATH).bufferedReader().use { it.readText() }
 
