@@ -47,6 +47,7 @@ class MessageAdapter(val context: Context) :
             lastPosition = position
         }
     }
+    
 
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
         (holder as CustomViewHolder).clearAnimation()
