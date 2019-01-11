@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.roberto.recyclerviewsample.R
 import com.example.roberto.recyclerviewsample.persistence.models.Message
+import com.example.roberto.recyclerviewsample.utils.px
 import kotlinx.android.synthetic.main.item_message.view.*
 
 
@@ -25,7 +26,7 @@ class UserMessageViewHolder(view: View) : CustomViewHolder(view) { //TODO UI
         cardViewAvatar.visibility = View.INVISIBLE
 
         val params = cardViewMessage.layoutParams as MarginLayoutParams
-        params.marginEnd = params.marginEnd / 2
+        params.marginEnd = 20.px
 
     }
 

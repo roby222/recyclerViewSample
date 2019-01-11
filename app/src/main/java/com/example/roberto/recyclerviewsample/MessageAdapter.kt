@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.example.roberto.recyclerviewsample.persistence.models.Message
 import com.example.roberto.recyclerviewsample.viewholders.AttachmentViewHolder
 import com.example.roberto.recyclerviewsample.viewholders.MessageViewHolder
+import com.example.roberto.recyclerviewsample.viewholders.OwnAttachmentViewHolder
 import com.example.roberto.recyclerviewsample.viewholders.UserMessageViewHolder
 
 
@@ -17,6 +18,7 @@ class MessageAdapter(val context: Context) :
     private val MESSAGE = 0
     private val ATTACHMENT = 1
     private val OWN_MESSAGE = 2
+    private val OWN_ATTACHMENT = 3
 
     private var lastPosition = -1
 
@@ -33,12 +35,16 @@ class MessageAdapter(val context: Context) :
                 messageViewHolder.bind(message!!)
             }
             OWN_MESSAGE -> {
-                val userMessageViewHolder = viewHolder as UserMessageViewHolder
-                userMessageViewHolder.bind(message!!)
+                val ownMessageViewHolder = viewHolder as UserMessageViewHolder
+                ownMessageViewHolder.bind(message!!)
             }
             ATTACHMENT -> {
                 val attachmentViewHolder = viewHolder as AttachmentViewHolder
                 attachmentViewHolder.bind(message!!)
+            }
+            OWN_ATTACHMENT -> {
+                val ownAttachmentViewHolder = viewHolder as OwnAttachmentViewHolder
+                ownAttachmentViewHolder.bind(message!!)
             }
         }
        //TODO setAnimation(viewHolder.itemView, position)
@@ -63,8 +69,8 @@ class MessageAdapter(val context: Context) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (getItem(position) == null) {
-            return -1
+        if (getItem(position)!!.isAnAttachment && getItem(position)!!.isOwnMessage) {
+            return OWN_ATTACHMENT
         }
         if (getItem(position)!!.isAnAttachment) {
             return ATTACHMENT
@@ -80,6 +86,11 @@ class MessageAdapter(val context: Context) :
         when (viewType) {
             ATTACHMENT -> {
                 recyclerViewHolder = AttachmentViewHolder(
+                    LayoutInflater.from(context).inflate(R.layout.item_attachment, parent, false)
+                )
+            }
+            OWN_ATTACHMENT -> {
+                recyclerViewHolder = OwnAttachmentViewHolder(
                     LayoutInflater.from(context).inflate(R.layout.item_attachment, parent, false)
                 )
             }
