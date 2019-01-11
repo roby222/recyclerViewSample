@@ -83,31 +83,9 @@ class MessageAdapter(val context: Context) :
         return recyclerViewHolder
     }
 
-    //TODO possibilità di cancellare ATTACHMENT e messaggi
-/*    private fun setRecyclerViewItemTouchListener() {
-
-        //1
-        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, viewHolder1: RecyclerView.ViewHolder): Boolean {
-                //2
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                //3
-                val position = viewHolder.adapterPosition
-                photosList.removeAt(position)
-                recyclerView.adapter.notifyItemRemoved(position)
-            }
-        }
-
-        //4
-        val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
-    }*/
-
+    fun getMessageItem(position: Int): Message {
+        return getItem(position)!!
+    }
 
     //TODO RECYCLING CHECKS e clear
-
-
 }

@@ -14,13 +14,18 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 
-class ChatRepository(val network: MainNetwork, val messagesDao: MessageDao) {
-
+class ChatRepository(private val network: MainNetwork, private val messagesDao: MessageDao) {
 
     val paginatedMessages: DataSource.Factory<Int, Message> by lazy(
         LazyThreadSafetyMode.NONE
     ) {
         messagesDao.loadMessagesPaginated()
+    }
+
+    suspend fun deleteMessage(message: Message) {
+        withContext(Dispatchers.IO) {
+            messagesDao.delete(message)
+        }
     }
 
     suspend fun refreshChatBox() {
@@ -74,7 +79,6 @@ class ChatRepository(val network: MainNetwork, val messagesDao: MessageDao) {
             }
         }
     }
-
 }
 
 class ChatBoxRefreshError(cause: Throwable) : Throwable(cause.message, cause)

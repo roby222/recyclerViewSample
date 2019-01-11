@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import com.example.roberto.recyclerviewsample.persistence.getDatabase
 import kotlinx.android.synthetic.main.activity_main.*
@@ -31,10 +32,15 @@ class MainActivity : AppCompatActivity() {
         recyclerview.adapter = adapter
         recyclerview.itemAnimator = DefaultItemAnimator()
 
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(adapter) {
+            val position = it.adapterPosition
+            val messageToDelete = adapter.getMessageItem(position)
+            viewModel.deleteItem(messageToDelete)
+        })
+        itemTouchHelper.attachToRecyclerView(recyclerview)
+
         subscribeUI(adapter)
-
         viewModel.onMainViewLoaded()
-
     }
 
     private fun subscribeUI(adapter: MessageAdapter) {

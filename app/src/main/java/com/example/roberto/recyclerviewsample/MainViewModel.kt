@@ -67,19 +67,25 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
 
     }
 
-    fun loadRecyclerView() {
+    private fun loadRecyclerView() {
         launchDataLoad {
             repository.refreshChatBox()
         }
     }
 
     private fun launchDataLoad(block: suspend () -> Unit): Job {
-        return uiScope.launch {
+        return uiScope.launch { //TODO eliminare il try catch
             try {
                 block()
             } catch (error: ChatBoxRefreshError) {
                 Log.e("MainViewModel", "Failed to retrieve data")
             }
+        }
+    }
+
+    fun deleteItem(messageToDelete: Message) {
+        uiScope.launch {
+            repository.deleteMessage(messageToDelete)
         }
     }
 

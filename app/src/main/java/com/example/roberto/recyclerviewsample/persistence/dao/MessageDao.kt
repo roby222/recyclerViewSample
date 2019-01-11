@@ -18,6 +18,4 @@ interface MessageDao {
 
     @Delete
     fun delete(person: Message)
-
-    //TODO UPDATE/DELETE enrichment
 }
