@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import com.example.roberto.recyclerviewsample.viewholders.CustomViewHolder
 
-class SwipeToDeleteCallback(private val mAdapter: MessageAdapter,private val onDelete: (CustomViewHolder) -> Unit) :
+class SwipeToDeleteCallback(private val mAdapter: MessageAdapter, private val onDelete: (CustomViewHolder) -> Unit) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
     override fun onMove(

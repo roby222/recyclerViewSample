@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModel
 import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
-import android.util.Log
 import com.example.roberto.recyclerviewsample.persistence.models.Message
 import com.example.roberto.recyclerviewsample.utils.singleArgViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -64,22 +63,11 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
 
     fun onMainViewLoaded() {
         loadRecyclerView()
-
     }
 
     private fun loadRecyclerView() {
-        launchDataLoad {
+        uiScope.launch {
             repository.refreshChatBox()
-        }
-    }
-
-    private fun launchDataLoad(block: suspend () -> Unit): Job {
-        return uiScope.launch { //TODO eliminare il try catch
-            try {
-                block()
-            } catch (error: ChatBoxRefreshError) {
-                Log.e("MainViewModel", "Failed to retrieve data")
-            }
         }
     }
 
