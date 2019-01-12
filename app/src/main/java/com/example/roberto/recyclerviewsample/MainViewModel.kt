@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
+import com.example.roberto.recyclerviewsample.persistence.ChatRepository
 import com.example.roberto.recyclerviewsample.persistence.models.Message
 import com.example.roberto.recyclerviewsample.utils.singleArgViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -12,13 +13,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+private const val PAGE_SIZE = 20
+private const val INITIAL_LOAD_SIZE_HINT = 20
+
 class MainViewModel(private val repository: ChatRepository) : ViewModel() {
+
 
     companion object {
         /**
          * Factory for creating [MainViewModel]
          *
-         * @param arg the repository to pass to [MainViewModel]
          */
         val FACTORY = singleArgViewModelFactory(::MainViewModel)
     }
@@ -28,13 +32,15 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
     var messagesLiveData: LiveData<PagedList<Message>>
 
     init {
-        //todo convertire
         val factory: DataSource.Factory<Int, Message> = paginatedMessages
-//TODO FLAT OBJECT
-        //TODO Cercare come manipolare
-        //https://stackoverflow.com/questions/50058825/how-to-transform-items-in-a-pagedlistandroid-arch-component-paging-library
-        //l'idea è di duplicare i messages con le informazioni sugli attachments
-        val pagedListBuilder: LivePagedListBuilder<Int, Message> = LivePagedListBuilder<Int, Message>(factory, 20)
+        val pagedListConfig = PagedList.Config.Builder()
+            .setEnablePlaceholders(true)
+            .setInitialLoadSizeHint(INITIAL_LOAD_SIZE_HINT)
+            .setPageSize(PAGE_SIZE)
+            .build()
+
+        val pagedListBuilder: LivePagedListBuilder<Int, Message> =
+            LivePagedListBuilder<Int, Message>(factory, pagedListConfig)
         messagesLiveData = pagedListBuilder.build()
     }
 

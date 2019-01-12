@@ -1,6 +1,7 @@
-package com.example.roberto.recyclerviewsample
+package com.example.roberto.recyclerviewsample.persistence
 
 import android.arch.paging.DataSource
+import com.example.roberto.recyclerviewsample.MainNetwork
 import com.example.roberto.recyclerviewsample.persistence.dao.MessageDao
 import com.example.roberto.recyclerviewsample.persistence.models.Attachment
 import com.example.roberto.recyclerviewsample.persistence.models.ChatData
@@ -39,13 +40,16 @@ class ChatRepository(private val network: MainNetwork, private val messagesDao: 
         var indexLong = -1L
 
         //TODO damned room @embedded
-        //https://android.jlelse.eu/setting-android-room-in-real-project-58a77469737c
-        //https://commonsware.com/AndroidArch/previews/room-and-custom-types
+        /*  Tricky part
+            I handle all local data in a "custom way" for the recycler adapter use
+            storing messages and attachment in the same structure
+            it will be nice if in Room there are the 1:1 copy of network data
+            via flat operation we provide the data "formatted" correcty for the adapter
+        */
         messages.onEach { messageDTO ->
             val user = chatData.users.find { it.id == messageDTO.userId }
-            finalMessages.add(
+            finalMessages.add( // original message
                 Message(
-                    // UUID.randomUUID().toString(), //FAKE id
                     ++indexLong,
                     messageDTO.id,
                     messageDTO.userId,
@@ -55,8 +59,8 @@ class ChatRepository(private val network: MainNetwork, private val messagesDao: 
                     null,
                     false
                 )
-            ) // original message
-            //only italian spaghetti code: add fake message
+            )
+            //only italian spaghetti code: add a fake message for each attachment
             val attachmentList: List<Attachment>? = messageDTO.attachments
             attachmentList?.onEach { attachment ->
                 finalMessages.add(

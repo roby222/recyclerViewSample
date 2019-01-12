@@ -1,4 +1,4 @@
-package com.example.roberto.recyclerviewsample
+package com.example.roberto.recyclerviewsample.recycler
 
 import android.support.v7.util.DiffUtil
 import com.example.roberto.recyclerviewsample.persistence.models.Message

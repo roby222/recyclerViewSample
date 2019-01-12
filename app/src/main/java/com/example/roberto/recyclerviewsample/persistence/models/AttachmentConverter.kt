@@ -16,13 +16,13 @@ object AttachmentConverter {
         }
         val listType = object : TypeToken<Attachment>() {
 
-        }.getType()
+        }.type
         return Gson().fromJson(data, listType)
     }
 
     @TypeConverter
     @JvmStatic
-    fun AttachmentToString(attachment: Attachment?): String {
+    fun attachmentToString(attachment: Attachment?): String {
         if (attachment == null) {
             return ""
         }

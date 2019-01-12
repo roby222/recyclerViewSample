@@ -1,23 +1,21 @@
-package com.example.roberto.recyclerviewsample
+package com.example.roberto.recyclerviewsample.recycler
 
 import android.arch.paging.PagedListAdapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.example.roberto.recyclerviewsample.R
 import com.example.roberto.recyclerviewsample.persistence.models.Message
-import com.example.roberto.recyclerviewsample.viewholders.AttachmentViewHolder
-import com.example.roberto.recyclerviewsample.viewholders.MessageViewHolder
+import com.example.roberto.recyclerviewsample.recycler.viewholders.AttachmentViewHolder
+import com.example.roberto.recyclerviewsample.recycler.viewholders.CustomViewHolder
+import com.example.roberto.recyclerviewsample.recycler.viewholders.MessageViewHolder
 
+private const val MESSAGE = 0
+private const val ATTACHMENT = 1
 
-class MessageAdapter(val context: Context) :
+class MessageAdapter(private val context: Context) :
     PagedListAdapter<Message, RecyclerView.ViewHolder>(MessageDiffCallback()) {
-
-    private val MESSAGE = 0
-    private val ATTACHMENT = 1
-
-    private var lastPosition = -1
-
 
     init {
         setHasStableIds(true)
@@ -35,23 +33,7 @@ class MessageAdapter(val context: Context) :
                 attachmentViewHolder.bind(message!!)
             }
         }
-        //TODO setAnimation(viewHolder.itemView, position)
     }
-
-    //TODO check animation https://proandroiddev.com/enter-animation-using-recyclerview-and-layoutanimation-part-1-list-75a874a5d213
-    /*private fun setAnimation(viewToAnimate: View, position: Int) {
-        // If the bound view wasn't previously displayed on screen, it's animated
-        if (position > lastPosition) {
-            val animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left)
-            viewToAnimate.startAnimation(animation)
-            lastPosition = position
-        }
-    }
-    
-
-    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        (holder as CustomViewHolder).clearAnimation()
-    }*/
 
     override fun getItemId(position: Int): Long {
         return getItem(position)!!.id
@@ -88,5 +70,8 @@ class MessageAdapter(val context: Context) :
         return getItem(position)!!
     }
 
-    //TODO RECYCLING CHECKS e clear
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        (holder as CustomViewHolder).recycle()
+    }
 }

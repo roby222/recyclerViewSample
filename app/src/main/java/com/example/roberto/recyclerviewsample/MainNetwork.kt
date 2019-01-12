@@ -17,7 +17,6 @@ interface MainNetwork {
  */
 class MainNetworkImpl(context: Context) : MainNetwork {
 
-    //TODO tests?
     private val objectArrayString =
         context.resources.openRawResource(FAKE_JSON_RESPONSE_PATH).bufferedReader().use { it.readText() }
 
