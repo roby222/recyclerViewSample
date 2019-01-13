@@ -1,7 +1,7 @@
 package com.example.roberto.recyclerviewsample
 
 import android.content.Context
-import com.example.roberto.recyclerviewsample.persistence.models.ChatData
+import com.example.roberto.recyclerviewsample.persistence.models.dto.ChatDataDTO
 import com.example.roberto.recyclerviewsample.utils.FAKE_JSON_RESPONSE_PATH
 import com.example.roberto.recyclerviewsample.utils.fakeNetworkLibrary
 
@@ -9,7 +9,7 @@ import com.example.roberto.recyclerviewsample.utils.fakeNetworkLibrary
  * Main network interface which will fetch all chat data
  */
 interface MainNetwork {
-    fun fetchChatData(): ChatData
+    fun fetchChatData(): ChatDataDTO
 }
 
 /**

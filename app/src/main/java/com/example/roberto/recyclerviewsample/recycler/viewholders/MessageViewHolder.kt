@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.roberto.recyclerviewsample.R
-import com.example.roberto.recyclerviewsample.persistence.models.Message
+import com.example.roberto.recyclerviewsample.persistence.models.ChatElement
 import com.example.roberto.recyclerviewsample.utils.GlideApp
 import kotlinx.android.synthetic.main.item_message.view.*
 
@@ -20,11 +20,11 @@ class MessageViewHolder(view: View) : CustomViewHolder(view) {
     private var cardViewMessage: CardView = view.cardViewContainer
     private var cardViewAvatar: CardView = view.cardViewAvatar
 
-    fun bind(message: Message) {
-        tvMessage.text = message.content
+    fun bind(chatElement: ChatElement) {
+        tvMessage.text = chatElement.content
 
         val params = cardViewMessage.layoutParams as ViewGroup.MarginLayoutParams
-        if (message.isOwnMessage) {
+        if (chatElement.isOwnMessage) {
             tvName.text = tvName.context.getString(R.string.own_message_title)
             tvName.gravity = Gravity.END
             cardViewAvatar.visibility = View.INVISIBLE
@@ -34,7 +34,7 @@ class MessageViewHolder(view: View) : CustomViewHolder(view) {
             return
         }
 
-        tvName.text = message.userName
+        tvName.text = chatElement.userName
         tvName.gravity = Gravity.START
         cardViewAvatar.visibility = View.VISIBLE
         cardViewMessage.backgroundTintList =
@@ -43,7 +43,7 @@ class MessageViewHolder(view: View) : CustomViewHolder(view) {
 
         GlideApp
             .with(imageView.context)
-            .load(message.userAvatar)
+            .load(chatElement.userAvatar)
             .into(imageView)
     }
 

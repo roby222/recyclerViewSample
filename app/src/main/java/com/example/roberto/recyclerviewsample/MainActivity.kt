@@ -7,13 +7,11 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import com.example.roberto.recyclerviewsample.persistence.ChatRepository
 import com.example.roberto.recyclerviewsample.persistence.getDatabase
-import com.example.roberto.recyclerviewsample.recycler.MessageAdapter
+import com.example.roberto.recyclerviewsample.recycler.ChatElementAdapter
 import com.example.roberto.recyclerviewsample.recycler.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.activity_main.*
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,33 +22,34 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val database = getDatabase(this)
-        val repository = ChatRepository(
-            MainNetworkImpl(this),
-            database.messageDao
-        )
+        val repository = ChatRepository(MainNetworkImpl(this), database.chatElementDao)
 
         viewModel = ViewModelProviders
             .of(this, MainViewModel.FACTORY(repository))
             .get(MainViewModel::class.java)
 
-        val messageAdapter = MessageAdapter(this)
+        initRecycler()
+    }
+
+    private fun initRecycler() {
+        val chatElementAdapter = ChatElementAdapter(this)
+
         recyclerview.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = messageAdapter
+            adapter = chatElementAdapter
             itemAnimator = DefaultItemAnimator()
         }
-
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback {
-            viewModel.deleteItem(messageAdapter.getMessageItem(it.adapterPosition))
+            //handling item delete
+            viewModel.deleteItem(chatElementAdapter.getChatElementItem(it.adapterPosition))
         })
         itemTouchHelper.attachToRecyclerView(recyclerview)
 
-        subscribeUI(messageAdapter)
-        viewModel.onMainViewLoaded()
+        subscribeUI(chatElementAdapter)
     }
 
-    private fun subscribeUI(adapter: MessageAdapter) {
-        viewModel.messagesLiveData.observe(this, Observer { messages ->
+    private fun subscribeUI(adapter: ChatElementAdapter) {
+        viewModel.chatElementsLiveData.observe(this, Observer { messages ->
             messages?.let {
                 adapter.submitList(messages)
             }

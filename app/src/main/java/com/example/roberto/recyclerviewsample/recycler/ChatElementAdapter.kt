@@ -6,16 +6,16 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.roberto.recyclerviewsample.R
-import com.example.roberto.recyclerviewsample.persistence.models.Message
+import com.example.roberto.recyclerviewsample.persistence.models.ChatElement
 import com.example.roberto.recyclerviewsample.recycler.viewholders.AttachmentViewHolder
 import com.example.roberto.recyclerviewsample.recycler.viewholders.CustomViewHolder
 import com.example.roberto.recyclerviewsample.recycler.viewholders.MessageViewHolder
 
-private const val MESSAGE = 0
-private const val ATTACHMENT = 1
+private const val MESSAGE_ITEM = 0
+private const val ATTACHMENT_ITEM = 1
 
-class MessageAdapter(private val context: Context) :
-    PagedListAdapter<Message, RecyclerView.ViewHolder>(MessageDiffCallback()) {
+class ChatElementAdapter(private val context: Context) :
+    PagedListAdapter<ChatElement, RecyclerView.ViewHolder>(ChatElementDiffCallback()) {
 
     init {
         setHasStableIds(true)
@@ -24,11 +24,11 @@ class MessageAdapter(private val context: Context) :
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         val message = getItem(position)
         when (viewHolder.itemViewType) {
-            MESSAGE -> {
+            MESSAGE_ITEM -> {
                 val messageViewHolder = viewHolder as MessageViewHolder
                 messageViewHolder.bind(message!!)
             }
-            ATTACHMENT -> {
+            ATTACHMENT_ITEM -> {
                 val attachmentViewHolder = viewHolder as AttachmentViewHolder
                 attachmentViewHolder.bind(message!!)
             }
@@ -41,20 +41,20 @@ class MessageAdapter(private val context: Context) :
 
     override fun getItemViewType(position: Int): Int {
         if (getItem(position)!!.isAnAttachment) {
-            return ATTACHMENT
+            return ATTACHMENT_ITEM
         }
-        return MESSAGE
+        return MESSAGE_ITEM
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         lateinit var recyclerViewHolder: RecyclerView.ViewHolder
         when (viewType) {
-            ATTACHMENT -> {
+            ATTACHMENT_ITEM -> {
                 recyclerViewHolder = AttachmentViewHolder(
                     LayoutInflater.from(context).inflate(R.layout.item_attachment, parent, false)
                 )
             }
-            MESSAGE -> {
+            MESSAGE_ITEM -> {
                 recyclerViewHolder = MessageViewHolder(
                     LayoutInflater.from(context).inflate(
                         R.layout.item_message,
@@ -66,7 +66,7 @@ class MessageAdapter(private val context: Context) :
         return recyclerViewHolder
     }
 
-    fun getMessageItem(position: Int): Message {
+    fun getChatElementItem(position: Int): ChatElement {
         return getItem(position)!!
     }
 

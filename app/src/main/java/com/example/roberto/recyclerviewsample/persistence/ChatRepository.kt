@@ -2,81 +2,77 @@ package com.example.roberto.recyclerviewsample.persistence
 
 import android.arch.paging.DataSource
 import com.example.roberto.recyclerviewsample.MainNetwork
-import com.example.roberto.recyclerviewsample.persistence.dao.MessageDao
-import com.example.roberto.recyclerviewsample.persistence.models.Attachment
-import com.example.roberto.recyclerviewsample.persistence.models.ChatData
-import com.example.roberto.recyclerviewsample.persistence.models.Message
+import com.example.roberto.recyclerviewsample.persistence.dao.ChatElementDao
+import com.example.roberto.recyclerviewsample.persistence.models.ChatElement
+import com.example.roberto.recyclerviewsample.persistence.models.dto.AttachmentDTO
+import com.example.roberto.recyclerviewsample.persistence.models.dto.ChatDataDTO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 
-class ChatRepository(private val network: MainNetwork, private val messagesDao: MessageDao) {
+class ChatRepository(private val network: MainNetwork, private val chatElementDao: ChatElementDao) {
 
-    val paginatedMessages: DataSource.Factory<Int, Message> by lazy(
+    val paginatedChatElements: DataSource.Factory<Int, ChatElement> by lazy(
         LazyThreadSafetyMode.NONE
     ) {
-        messagesDao.loadMessagesPaginated()
+        chatElementDao.load()
     }
 
-    suspend fun deleteMessage(message: Message) {
+    suspend fun deleteChatElement(chatElement: ChatElement) {
         withContext(Dispatchers.IO) {
-            messagesDao.delete(message)
+            chatElementDao.delete(chatElement)
         }
     }
 
-    suspend fun refreshChatBox() {
-        withContext(Dispatchers.IO) {
-            if (messagesDao.getMessageNumber() == 0) {
-                val chatData = network.fetchChatData()
-                messagesDao.insertMessagesCustom(handleData(chatData))
-            }
-        }
+    fun loadChatElements() {
+        val chatData = network.fetchChatData()
+        chatElementDao.insert(handleData(chatData))
     }
 
-    private fun handleData(chatData: ChatData): MutableList<Message> {
-        val finalMessages: MutableList<Message> = mutableListOf()
+    private fun handleData(chatData: ChatDataDTO): MutableList<ChatElement> {
+        val chatElementList: MutableList<ChatElement> = mutableListOf()
 
         val messages = chatData.messages
         var indexLong = -1L
 
         //TODO damned room @embedded
-        /*  Tricky part
-            I handle all local data in a "custom way" for the recycler adapter use
-            storing messages and attachment in the same structure
-            it will be nice if in Room there are the 1:1 copy of network data
-            via flat operation we provide the data "formatted" correcty for the adapter
+        /*  Tricky part:
+            I handle all local data in a "custom ChatElement object" to be easy for the recycler adapter use.
         */
         messages.onEach { messageDTO ->
             val user = chatData.users.find { it.id == messageDTO.userId }
-            finalMessages.add( // original message
-                Message(
-                    ++indexLong,
-                    messageDTO.id,
-                    messageDTO.userId,
-                    messageDTO.content,
-                    user!!.name,
-                    user.avatarId,
-                    null,
-                    false
+
+            // original message
+            chatElementList.add(
+                ChatElement(
+                    id = ++indexLong,
+                    messageId = messageDTO.id,
+                    userId = messageDTO.userId,
+                    content = messageDTO.content,
+                    userName = user!!.name,
+                    userAvatar = user.avatarId,
+                    _attachment = null,
+                    isAnAttachment = false
                 )
             )
-            //only italian spaghetti code: add a fake message for each attachment
-            val attachmentList: List<Attachment>? = messageDTO.attachments
+
+            //only italian spaghetti code: a fake message for each attachment
+            val attachmentList: List<AttachmentDTO>? = messageDTO.attachments
             attachmentList?.onEach { attachment ->
-                finalMessages.add(
-                    Message(
-                        ++indexLong,
-                        messageDTO.id,
-                        messageDTO.userId,
-                        messageDTO.content,
-                        user.name,
-                        user.avatarId,
-                        attachment,
-                        true
+                chatElementList.add(
+                    ChatElement(
+                        id = ++indexLong,
+                        messageId = messageDTO.id,
+                        userId = messageDTO.userId,
+                        content = messageDTO.content,
+                        userName = user.name,
+                        userAvatar = user.avatarId,
+                        _attachment = attachment,
+                        isAnAttachment = true
                     )
                 )
             }
         }
-        return finalMessages
+        return chatElementList
     }
 }

@@ -6,7 +6,7 @@ import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.example.roberto.recyclerviewsample.persistence.ChatRepository
-import com.example.roberto.recyclerviewsample.persistence.models.Message
+import com.example.roberto.recyclerviewsample.persistence.models.ChatElement
 import com.example.roberto.recyclerviewsample.utils.singleArgViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,23 +27,6 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
         val FACTORY = singleArgViewModelFactory(::MainViewModel)
     }
 
-    private val paginatedMessages = repository.paginatedMessages
-
-    var messagesLiveData: LiveData<PagedList<Message>>
-
-    init {
-        val factory: DataSource.Factory<Int, Message> = paginatedMessages
-        val pagedListConfig = PagedList.Config.Builder()
-            .setEnablePlaceholders(true)
-            .setInitialLoadSizeHint(INITIAL_LOAD_SIZE_HINT)
-            .setPageSize(PAGE_SIZE)
-            .build()
-
-        val pagedListBuilder: LivePagedListBuilder<Int, Message> =
-            LivePagedListBuilder<Int, Message>(factory, pagedListConfig)
-        messagesLiveData = pagedListBuilder.build()
-    }
-
     /**
      * This is the job for all coroutines started by this ViewModel.
      *
@@ -59,6 +42,23 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
      */
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+    private val paginatedChatElements = repository.paginatedChatElements
+
+    var chatElementsLiveData: LiveData<PagedList<ChatElement>>
+
+    init {
+        val factory: DataSource.Factory<Int, ChatElement> = paginatedChatElements
+        val pagedListConfig = PagedList.Config.Builder()
+            .setEnablePlaceholders(true)
+            .setInitialLoadSizeHint(INITIAL_LOAD_SIZE_HINT)
+            .setPageSize(PAGE_SIZE)
+            .build()
+
+        val pagedListBuilder: LivePagedListBuilder<Int, ChatElement> =
+            LivePagedListBuilder<Int, ChatElement>(factory, pagedListConfig)
+        chatElementsLiveData = pagedListBuilder.build()
+    }
+
     /**
      * Cancel all coroutines when the ViewModel is cleared
      */
@@ -67,19 +67,9 @@ class MainViewModel(private val repository: ChatRepository) : ViewModel() {
         viewModelJob.cancel()
     }
 
-    fun onMainViewLoaded() {
-        loadRecyclerView()
-    }
-
-    private fun loadRecyclerView() {
+    fun deleteItem(chatElementToDelete: ChatElement) {
         uiScope.launch {
-            repository.refreshChatBox()
-        }
-    }
-
-    fun deleteItem(messageToDelete: Message) {
-        uiScope.launch {
-            repository.deleteMessage(messageToDelete)
+            repository.deleteChatElement(chatElementToDelete)
         }
     }
 

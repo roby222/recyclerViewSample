@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.roberto.recyclerviewsample.R
-import com.example.roberto.recyclerviewsample.persistence.models.Message
+import com.example.roberto.recyclerviewsample.persistence.models.ChatElement
 import com.example.roberto.recyclerviewsample.utils.GlideApp
 import kotlinx.android.synthetic.main.item_attachment.view.*
 
@@ -19,27 +19,29 @@ class AttachmentViewHolder(view: View) : CustomViewHolder(view) {
     private var cardViewAvatar: CardView = view.cardViewAvatar
 
 
-    fun bind(message: Message) {
-        tvAttachmentName.text = message.attachment?.title
+    fun bind(chatElement: ChatElement) {
+        tvAttachmentName.text = chatElement.attachment?.title
 
         GlideApp.with(ivAttachmentImage.context)
-            .load(message.attachment?.url)
+            .load(chatElement.attachment?.url)
             .placeholder(ivAttachmentImage.context.getDrawable(R.drawable.placeholder))
             .into(ivAttachmentImage)
 
         val params = cardViewContainer.layoutParams as ViewGroup.MarginLayoutParams
 
-        if (message.isOwnMessage) {
+        if (chatElement.isOwnMessage) {
             params.marginEnd = cardViewContainer.context.resources.getDimension(R.dimen.own_padding).toInt()
             cardViewAvatar.visibility = View.INVISIBLE
-        } else {
-            params.marginEnd = cardViewContainer.context.resources.getDimension(R.dimen.other_padding).toInt()
-            cardViewAvatar.visibility = View.VISIBLE
-            GlideApp
-                .with(userImageView.context)
-                .load(message.userAvatar)
-                .into(userImageView)
+            return
         }
+
+        params.marginEnd = cardViewContainer.context.resources.getDimension(R.dimen.other_padding).toInt()
+        cardViewAvatar.visibility = View.VISIBLE
+        GlideApp
+            .with(userImageView.context)
+            .load(chatElement.userAvatar)
+            .into(userImageView)
+
     }
 
     override fun recycle() {
